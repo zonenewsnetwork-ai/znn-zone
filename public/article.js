@@ -21,6 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
       try {
         console.log("📰 Loading article:", articleId);
 
+        const API_BASE = "https://znn-zone.onrender.com";
         const res = await fetch(`${API_BASE}/api/news/${articleId}`);
 
         if (res.ok) {
