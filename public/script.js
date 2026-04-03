@@ -89,7 +89,7 @@ document.addEventListener("DOMContentLoaded", () => {
     loading = true;
 
     console.log("📂 Loading category:", currentCat);
-    
+
     // We modify mainMount instead of newsContainer so we don't destroy our hero and layout structure
     const container = document.getElementById("mainMount");
 
@@ -101,8 +101,13 @@ document.addEventListener("DOMContentLoaded", () => {
     if (app) app.style.display = "none";
 
     try {
+      const API_BASE = "https://znn-zone.onrender.com";
+
       const mapped = mapCategory(category);
-      const url = mapped && mapped !== 'all' ? `/api/news?category=${mapped}` : "/api/news";
+      const url = mapped && mapped !== 'all'
+        ? `${API_BASE}/api/news?category=${mapped}`
+        : `${API_BASE}/api/news`;
+
       console.log(`🔍 Fetching news from API: ${url}`);
 
       const res = await fetch(url);
@@ -127,9 +132,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
       articles = data;
       window.allNews = articles;
-      
+
       // ✅ CALLED RENDER (which replaces renderNews)
-      render(); 
+      render();
       loaded = true;
 
       if (skel) skel.style.display = "none";
@@ -188,7 +193,7 @@ document.addEventListener("DOMContentLoaded", () => {
       l.classList.remove("active");
       l.classList.remove("nav-a--on");
     });
-    
+
     // ✅ HIGHLIGHT LIVE TAB
     const lBtn = document.getElementById("liveTab") || document.getElementById("liveBtn");
     if (lBtn) {
@@ -201,7 +206,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (nContainer) nContainer.style.display = "none";
     if (lContainer) lContainer.style.display = "block";
-    
+
     currentMode = "live";
     loadLiveChannels();
   }

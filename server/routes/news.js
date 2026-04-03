@@ -121,20 +121,26 @@ router.get('/breaking', async (req, res) => {
   }
 });
 
-// GET /api/news/id/:id — Single article by UUID
-router.get('/id/:id', async (req, res) => {
-  try {
-    const { data, error } = await supabase
-      .from('news')
-      .select('*')
-      .eq('id', req.params.id)
-      .single();
+// GET /api/news/:id — Single article by UUID
+router.get('/:id', async (req, res) => {
+  const { id } = req.params;
 
-    if (error || !data) return res.status(404).json({ error: 'Article not found' });
-    res.json(data);
-  } catch (err) {
-    res.status(500).json({ error: 'Server error' });
+  console.log("ID:", id); // debug
+
+  const { data, error } = await supabase
+    .from('news')
+    .select('*')
+    .filter('id', 'eq', id); // ✅ change here
+
+  if (error) {
+    return res.status(500).json({ error });
   }
+
+  if (!data || data.length === 0) {
+    return res.status(404).json({ error: "Article not found" });
+  }
+
+  res.json(data[0]); // ✅ return first item
 });
 
 // POST /api/news/view/:id — Increment view count
