@@ -6,93 +6,90 @@
     <title id="metaTitle">Loading Article... | ZNN News</title>
     <meta name="description" id="metaDesc" content="Read the latest news on ZNN.">
     <link rel="icon" href="/logo.png">
-    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
 </head>
-<body class="bg-white">
-
-    <!-- STICKY HEADER -->
-    <header class="hdr sticky top-0 bg-white border-b border-gray-100 z-50">
-        <div class="wrap flex items-center justify-between p-4">
-            <a href="/" class="flex items-center gap-2">
-                <img src="/logo.png" alt="ZNN" class="h-8">
-                <span class="font-black text-xl tracking-tighter uppercase italic">ZNN</span>
-            </a>
-            <a href="/" class="text-sm font-bold uppercase tracking-widest text-[#d0021b]">Back Home</a>
-        </div>
-    </header>
-
-    <main class="article-premium">
-        
-        <!-- SKELETON LOADER -->
-        <div id="articleSkeleton" class="space-y-4">
-            <div class="w-24 h-6 skeleton-v2"></div>
-            <div class="w-full h-12 skeleton-v2"></div>
-            <div class="w-3/4 h-8 skeleton-v2"></div>
-            <div class="w-full h-64 skeleton-v2"></div>
-            <div class="space-y-2">
-                <div class="w-full h-4 skeleton-v2"></div>
-                <div class="w-full h-4 skeleton-v2"></div>
-                <div class="w-full h-4 skeleton-v2"></div>
+<body class="article-page-body">
+    <div class="art-page-wrapper">
+        <!-- PREMIUM STICKY HEADER -->
+        <header class="art-header">
+            <div class="art-header__inner">
+                <a href="javascript:history.back()" class="art-header__action" title="Go Back">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <a href="/" class="art-header__logo-container">
+                    <img src="/logo.png" alt="ZNN" class="art-header__logo">
+                </a>
+                <a href="/" class="art-header__action" title="Home">
+                    <i class="fas fa-home"></i>
+                </a>
             </div>
-        </div>
+        </header>
 
-        <!-- ACTUAL ARTICLE -->
-        <article id="articleContent" style="display:none" class="fade-in">
-            <header class="article-header">
-                <div id="artMetaV2" class="flex items-center gap-3 mb-6">
-                    <!-- Dynamic Badges/Category -->
+        <main class="art-container">
+            <!-- LOADING STATE (Premium Skeletons) -->
+            <div id="artSkeleton">
+                <div class="art-skeleton art-skeleton-title"></div>
+                <div class="art-skeleton art-skeleton-title" style="width: 50%;"></div>
+                <div class="art-skeleton art-skeleton-banner"></div>
+                <div class="art-skeleton art-skeleton-text"></div>
+                <div class="art-skeleton art-skeleton-text"></div>
+                <div class="art-skeleton art-skeleton-text"></div>
+                <div class="art-skeleton art-skeleton-text" style="width: 80%;"></div>
+            </div>
+
+            <!-- ERROR STATE -->
+            <div id="artError" style="display: none;" class="art-error">
+                <i class="fas fa-exclamation-triangle"></i>
+                <h2>Story Not Available</h2>
+                <p id="errorMsg">The article you are looking for could not be loaded.</p>
+                <a href="/" class="art-btn-home">Back to Newsroom</a>
+            </div>
+
+            <!-- PREMIUM ARTICLE CONTENT -->
+            <article id="artContent" style="display: none;" class="art-card">
+                <header>
+                    <span id="artCategory" class="art-category">Category</span>
+                    <h1 id="artTitle" class="art-title"></h1>
+                    <div class="art-meta">
+                        <span id="artAuthor" class="art-author">ZNN Editorial</span> • 
+                        <span id="artDate"></span>
+                    </div>
+                </header>
+
+                <img id="artHero" class="art-hero-img" src="" alt="">
+
+                <div id="artBody" class="art-content">
+                    <!-- Content injected here -->
                 </div>
-                <h1 id="artTitleV2" class="article-title"></h1>
-                <p id="artSubtitleV2" class="article-subtitle"></p>
-                <div class="flex items-center gap-4 py-4 text-sm text-gray-500 border-y border-gray-50">
-                    <span id="artAuthorV2" class="font-bold text-black uppercase tracking-widest">ZNN Editorial</span>
-                    <span class="text-gray-200">|</span>
-                    <span id="artDateV2"></span>
-                    <span class="text-gray-200">|</span>
-                    <span id="artViewsV2"><i class="fas fa-eye mr-1"></i> 0 views</span>
+
+                <!-- SOCIAL SHARE BUTTONS -->
+                <div class="art-share">
+                    <button class="art-share-btn share-tw" title="Share on X"><i class="fab fa-x-twitter"></i></button>
+                    <button class="art-share-btn share-fb" title="Share on Facebook"><i class="fab fa-facebook-f"></i></button>
+                    <button class="art-share-btn share-wa" title="Share on WhatsApp"><i class="fab fa-whatsapp"></i></button>
+                    <button class="art-share-btn share-copy" title="Copy Link"><i class="fas fa-link"></i></button>
                 </div>
-            </header>
+            </article>
 
-            <div id="artHeroV2" class="article-hero-v2">
-                <img id="artImgV2" src="" alt="" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1504711434969-e33886168d5c?w=1200'">
+            <!-- RELATED STORIES SECTION -->
+            <section id="artRelated" class="art-related" style="display: none;">
+                <h2 class="art-related-title">Related Stories</h2>
+                <div id="relatedGrid" class="art-related-grid">
+                    <!-- Related cards injected here -->
+                </div>
+            </section>
+        </main>
+
+        <!-- PREMIUM FOOTER -->
+        <footer class="art-footer">
+            <div class="wrap">
+                <img src="/logo.png" alt="ZNN" class="art-footer-logo">
+                <p class="art-footer-copy">&copy; 2026 ZNN - Zone News Network</p>
             </div>
+        </footer>
+    </div>
 
-            <!-- SHARE BAR -->
-            <div class="share-bar-v2">
-                <button class="share-btn-v2 twitter" title="Share on X"><i class="fab fa-x-twitter"></i></button>
-                <button class="share-btn-v2 facebook" title="Share on Facebook"><i class="fab fa-facebook-f"></i></button>
-                <button class="share-btn-v2 whatsapp" title="Share on WhatsApp"><i class="fab fa-whatsapp"></i></button>
-                <button class="share-btn-v2 copy-link" title="Copy Link"><i class="fas fa-link"></i></button>
-            </div>
-
-            <div id="artBodyV2" class="article-body-v2">
-                <!-- Content will load here -->
-            </div>
-
-            <!-- SOURCE FOOTER -->
-            <div id="artSourceV2" class="pt-8 border-t border-gray-100 text-sm text-gray-400 italic">
-            </div>
-        </article>
-
-        <!-- RELATED STORIES -->
-        <div id="relatedSection" style="display:none" class="mt-16 pt-16 border-t border-gray-100">
-            <h2 class="text-2xl font-black italic uppercase tracking-tighter mb-8">Related Stories</h2>
-            <div id="relatedGrid" class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            </div>
-        </div>
-    </main>
-
-    <!-- FOOTER -->
-    <footer class="bg-[#111] text-white py-12 mt-20">
-        <div class="wrap flex flex-col items-center gap-4">
-            <img src="/logo.png" alt="ZNN" class="h-6 opacity-50 grayscale">
-            <p class="text-xs text-gray-500 uppercase tracking-widest">&copy; 2026 ZNN - Zone News Network. All rights reserved.</p>
-        </div>
-    </footer>
-
-    <button id="s2t" class="s2t"><i class="fas fa-arrow-up"></i></button>
-
-    <script src="article.js"></script>
+    <script src="article.js?v=3"></script>
 </body>
 </html>

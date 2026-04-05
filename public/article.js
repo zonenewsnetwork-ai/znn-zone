@@ -1,217 +1,208 @@
-/* ==========================================================
-   ZNN – article.js | Premium BBC Edition v1.0
-   ========================================================== */
+/**
+ * ZNN News – Premium Article Page Logic
+ * BBC + Apple Style Redesign
+ */
 
 document.addEventListener("DOMContentLoaded", () => {
     const API_BASE = "https://znn-zone.onrender.com";
-    const FALLBACK_IMG = 'https://images.unsplash.com/photo-1504711434969-e33886168d5c?w=1200&fit=crop';
+    const FALLBACK_IMG = "https://images.unsplash.com/photo-1504711434969-e33886168d5c?w=1200&fit=crop";
 
-    // DOM Elements - BBC Enhanced
-    const el = {
-        title: document.getElementById("artTitleV2"),
-        subtitle: document.getElementById("artSubtitleV2"),
-        meta: document.getElementById("artMetaV2"),
-        img: document.getElementById("artImgV2"),
-        body: document.getElementById("artBodyV2"),
-        source: document.getElementById("artSourceV2"),
-        views: document.getElementById("artViewsV2"),
-        date: document.getElementById("artDateV2"),
-        author: document.getElementById("artAuthorV2"),
-        skeleton: document.getElementById("articleSkeleton"),
-        content: document.getElementById("articleContent"),
-        s2t: document.getElementById("s2t"),
+    // DOM Elements (with enhanced verification)
+    const elements = {
+        skeleton: document.getElementById("artSkeleton"),
+        content: document.getElementById("artContent"),
+        error: document.getElementById("artError"),
+        errorMsg: document.getElementById("errorMsg"),
+        category: document.getElementById("artCategory"),
+        title: document.getElementById("artTitle"),
+        metaAuthor: document.getElementById("artAuthor"),
+        metaDate: document.getElementById("artDate"),
+        heroImg: document.getElementById("artHero"),
+        body: document.getElementById("artBody"),
         relatedGrid: document.getElementById("relatedGrid"),
-        relatedSection: document.getElementById("relatedSection")
+        relatedSection: document.getElementById("artRelated"),
+        metaTitle: document.getElementById("metaTitle"),
+        metaDesc: document.getElementById("metaDesc")
     };
 
-    /**
-     * Scroll & UI Logic
-     */
-    window.addEventListener("scroll", () => {
-        if (el.s2t) el.s2t.classList.toggle("s2t--on", window.scrollY > 400);
-    });
-
-    if (el.s2t) el.s2t.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
-
-    // Share Functionality BBC Style
-    document.querySelectorAll(".share-btn-v2").forEach(btn => {
-        btn.addEventListener("click", () => {
-            const url = window.location.href;
-            const title = el.title?.innerText || "ZNN News";
-            let shareUrl = "";
-
-            if (btn.classList.contains("twitter")) shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(url)}`;
-            if (btn.classList.contains("facebook")) shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
-            if (btn.classList.contains("whatsapp")) shareUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(title + " " + url)}`;
-            if (btn.classList.contains("copy-link")) {
-                navigator.clipboard.writeText(url).then(() => {
-                    const icon = btn.querySelector("i");
-                    icon.className = "fas fa-check";
-                    setTimeout(() => icon.className = "fas fa-link", 2000);
-                });
-                return;
-            }
-            if (shareUrl) window.open(shareUrl, "_blank", "width=600,height=400");
-        });
+    // Logging verification
+    console.log("ZNN: Initializing Article View...");
+    Object.entries(elements).forEach(([key, el]) => {
+        if (!el) console.warn(`ZNN: Missing element for ID: ${key}`);
     });
 
     /**
-     * Core Data Loading
+     * INITIALIZE PAGE
      */
-    async function loadArticle() {
-        const params = new URLSearchParams(window.location.search);
-        const id = params.get("id");
+    async function init() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const id = urlParams.get("id");
 
         if (!id) {
-            handleError("Article ID not found.");
+            showError("No article ID found in the URL.");
             return;
         }
 
-        const url = `${API_BASE}/api/news/${id}`;
-        console.log("📰 Fetching article from:", url);
-
         try {
-            const res = await fetch(url);
+            // Fetch Article Data
+            const res = await fetch(`${API_BASE}/api/news/${id}`);
             const data = await res.json();
-            
-            console.log("✅ Article Loaded:", data);
 
+            // Validation: if (!data || !data.id)
             if (!data || !data.id) {
-                handleError("Article Not Found");
+                showError("The requested news story could not be found.");
                 return;
             }
 
             renderArticle(data);
-            loadRelated(data.category, data.id);
-
+            fetchRelated(data.category, data.id);
         } catch (err) {
-            console.error("❌ Article Fetch Error:", err);
-            handleError("Something went wrong while loading the news.");
+            console.error("ZNN Error:", err);
+            showError("Failed to connect to ZNN servers. Please try again later.");
         }
     }
 
     /**
-     * Render Logic - BBC Editorial Style
+     * RENDER MAIN ARTICLE
      */
-    function renderArticle(a) {
-        // Toggle skeleton/content
-        if (el.skeleton) el.skeleton.style.display = "none";
-        if (el.content) el.content.style.display = "block";
+    function renderArticle(art) {
+        console.log("ZNN: Rendering Article:", art.title);
 
-        // Headings & Subtitles
-        if (el.title) el.title.innerText = a.title || "";
-        if (el.subtitle) el.subtitle.innerText = a.description || "";
+        // Switch visibility
+        if (elements.skeleton) elements.skeleton.style.display = "none";
+        if (elements.content) elements.content.style.display = "block";
 
-        // Meta (Badges/Time)
-        if (el.meta) {
-            let metaHTML = "";
-            if (a.is_breaking) metaHTML += '<span class="badge badge--breaking mr-2">BREAKING</span>';
-            metaHTML += `<span class="bg-[#d0021b] text-white px-2 py-1 text-[10px] uppercase font-black italic tracking-widest">${esc(a.category || "NEWS")}</span>`;
-            el.meta.innerHTML = metaHTML;
+        // SEO & Titles
+        const displayTitle = art.title || "Untitled News";
+        if (elements.metaTitle) elements.metaTitle.textContent = `${displayTitle} | ZNN News`;
+        if (elements.title) elements.title.textContent = displayTitle;
+        if (elements.category) elements.category.textContent = (art.category || "General").toUpperCase();
+
+        // Meta Info
+        if (elements.metaAuthor) elements.metaAuthor.textContent = art.author || "ZNN Editorial";
+        if (elements.metaDate) elements.metaDate.textContent = formatDate(art.created_at);
+
+        // Hero Image
+        const imgUrl = art.image_url || art.image || FALLBACK_IMG;
+        if (elements.heroImg) {
+            elements.heroImg.src = imgUrl;
+            elements.heroImg.alt = displayTitle;
+            elements.heroImg.onerror = () => { elements.heroImg.src = FALLBACK_IMG; };
         }
 
-        // Image Handling
-        if (el.img) {
-            el.img.src = a.image_url || a.image || FALLBACK_IMG;
-            el.img.alt = a.title || "ZNN News";
-            el.img.onerror = () => el.img.src = FALLBACK_IMG;
+        // Content Body (Handle Markdown or Newlines)
+        let contentStr = art.full_content || art.content || art.description || "No content available.";
+        if (!contentStr.includes("<p>")) {
+            contentStr = contentStr.split("\n\n").map(p => `<p>${p.trim()}</p>`).join("");
+        }
+        if (elements.body) elements.body.innerHTML = contentStr;
+
+        // Meta Description update
+        if (elements.metaDesc) {
+            elements.metaDesc.content = contentStr.replace(/<[^>]*>/g, "").substring(0, 160) + "...";
         }
 
-        // Meta Bottom (Author/Date/Views)
-        if (el.date) el.date.innerText = formatDate(a.created_at);
-        if (el.author) el.author.innerText = a.author || "ZNN Editorial";
-        if (el.views) el.views.innerHTML = `<i class="fas fa-eye mr-1"></i> ${formatViews(a.views || 0)} views`;
+        // Setup Social Share with proper event listeners
+        setupSocial(displayTitle);
 
-        // Content
-        if (el.body) {
-            let content = a.full_content || a.content || a.description || "";
-            // Ensure HTML structure for readability
-            if (!content.includes("<p>")) {
-                content = content.split("\n\n").map(p => `<p>${p.trim()}</p>`).join("");
-            }
-            el.body.innerHTML = content;
-        }
-
-        // Source Footer
-        if (el.source) {
-            if (a.url) {
-                el.source.innerHTML = `Original Source: <a href="${a.url}" target="_blank" class="text-[#d0021b] underline">${esc(a.source || "View Source")}</a>`;
-            } else {
-                el.source.innerText = `Published by Zone News Network (ZNN).`;
-            }
-        }
-
-        // Update Page SEO
-        document.title = `${a.title} | ZNN News`;
+        // Scroll to top
+        window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
     /**
-     * Related Stories Section
+     * FETCH & RENDER RELATED STORIES
      */
-    async function loadRelated(category, excludeId) {
-        if (!el.relatedGrid) return;
+    async function fetchRelated(category, currentId) {
         try {
             const res = await fetch(`${API_BASE}/api/news`);
-            const all = await res.json();
-            if (!Array.isArray(all)) return;
-
-            // Filter for same category, exclude current article
-            let related = all.filter(item => item.id !== excludeId);
-            if (category) related = related.filter(item => item.category === category);
+            const allNews = await res.json();
             
-            related = related.slice(0, 2); // Show 2 premium cards
+            if (!Array.isArray(allNews)) return;
 
-            if (related.length > 0) {
-                if (el.relatedSection) el.relatedSection.style.display = "block";
-                el.relatedGrid.innerHTML = related.map(item => `
-                    <div class="cursor-pointer group flex flex-col gap-4" onclick="location.href='/article.html?id=${item.id}'">
-                        <div class="h-48 overflow-hidden bg-gray-100 rounded-lg">
-                            <img src="${item.image_url || FALLBACK_IMG}" class="w-full h-full object-cover transition-transform group-hover:scale-105 duration-500" loading="lazy">
-                        </div>
-                        <div>
-                            <span class="text-[10px] text-[#d0021b] font-black uppercase tracking-widest mb-1 block">${esc(item.category || "NEWS")}</span>
-                            <h3 class="text-xl font-bold leading-tight group-hover:underline">${esc(item.title)}</h3>
-                        </div>
+            // Filter by category, exclude current, limit to 4 (for 2x2 grid)
+            const related = allNews
+                .filter(item => item.id !== currentId && item.category === category)
+                .slice(0, 4);
+
+            if (related.length > 0 && elements.relatedSection && elements.relatedGrid) {
+                elements.relatedSection.style.display = "block";
+                elements.relatedGrid.innerHTML = related.map(item => `
+                    <div class="art-related-card" onclick="window.location.href='/article.html?id=${item.id}'">
+                        <img src="${item.image_url || item.image || FALLBACK_IMG}" alt="${esc(item.title)}" loading="lazy">
+                        <h3>${esc(item.title)}</h3>
                     </div>
                 `).join("");
             }
-        } catch (e) {
-            console.error("Related Stories Load Fail:", e);
+        } catch (err) {
+            console.warn("Related stories load failed:", err);
         }
     }
 
     /**
-     * Error Handling UI
+     * SOCIAL SHARE LOGIC
      */
-    function handleError(msg) {
-        if (el.skeleton) el.skeleton.style.display = "none";
-        if (el.content) el.content.style.display = "block";
-        if (el.title) el.title.innerText = "Article Not Found";
-        if (el.subtitle) el.subtitle.innerText = msg || "The article you are looking for doesn't exist or has been removed.";
-        if (el.meta) el.meta.style.display = "none";
+    function setupSocial(title) {
+        const url = window.location.href;
+        const text = encodeURIComponent(`Check out this story on ZNN: ${title}`);
+        const encodedUrl = encodeURIComponent(url);
+
+        const handlers = {
+            tw: () => window.open(`https://twitter.com/intent/tweet?text=${text}&url=${encodedUrl}`, "_blank"),
+            fb: () => window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`, "_blank"),
+            wa: () => window.open(`https://api.whatsapp.com/send?text=${text}%20${encodedUrl}`, "_blank"),
+            copy: () => {
+                navigator.clipboard.writeText(url).then(() => {
+                    const btn = document.querySelector(".share-copy");
+                    const icon = btn.querySelector("i");
+                    if (!icon) return;
+                    const originalClass = icon.className;
+                    icon.className = "fas fa-check";
+                    btn.classList.add("copied");
+                    setTimeout(() => {
+                        icon.className = originalClass;
+                        btn.classList.remove("copied");
+                    }, 2000);
+                });
+            }
+        };
+
+        const btnTw = document.querySelector(".share-tw");
+        const btnFb = document.querySelector(".share-fb");
+        const btnWa = document.querySelector(".share-wa");
+        const btnCopy = document.querySelector(".share-copy");
+
+        if (btnTw) btnTw.onclick = handlers.tw;
+        if (btnFb) btnFb.onclick = handlers.fb;
+        if (btnWa) btnWa.onclick = handlers.wa;
+        if (btnCopy) btnCopy.onclick = handlers.copy;
     }
 
     /**
-     * Formatting Utils
+     * UTILITIES
      */
-    function esc(s) { const d = document.createElement("div"); d.textContent = s || ""; return d.innerHTML; }
-    
-    function formatDate(d) {
-        if (!d) return "Recently Published";
-        const date = new Date(d);
-        return date.toLocaleDateString("en-GB", {
-            day: "numeric",
+    function showError(msg) {
+        if (elements.skeleton) elements.skeleton.style.display = "none";
+        if (elements.content) elements.content.style.display = "none";
+        if (elements.error) elements.error.style.display = "block";
+        if (elements.errorMsg) elements.errorMsg.textContent = msg;
+    }
+
+    function formatDate(dateStr) {
+        if (!dateStr) return "Just Now";
+        const date = new Date(dateStr);
+        return date.toLocaleDateString("en-US", {
             month: "long",
+            day: "numeric",
             year: "numeric"
         });
     }
 
-    function formatViews(n) {
-        if (n >= 1000000) return (n/1000000).toFixed(1) + 'M';
-        if (n >= 1000) return (n/1000).toFixed(1) + 'K';
-        return n;
+    function esc(str) {
+        const div = document.createElement("div");
+        div.textContent = str || "";
+        return div.innerHTML;
     }
 
-    // Initialize
-    loadArticle();
+    // RUN BOOTSTRAP
+    init();
 });

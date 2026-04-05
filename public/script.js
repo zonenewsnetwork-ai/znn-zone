@@ -442,14 +442,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /* ---------- UTILS ---------- */
   window.openArticle = function (a) {
-    // Navigate to full article page by ID
+    if (!a) return;
+    
+    // NAVIGATION FIX:
+    // Always navigate to relative article.html to stay on frontend domain (Netlify).
+    // Do NOT include backend domain (znn-zone.onrender.com).
     if (a.id) {
       window.location.href = `/article.html?id=${a.id}`;
     } else if (a.slug) {
       window.location.href = `/article.html?s=${a.slug}`;
     } else {
       localStorage.setItem("znn_article", JSON.stringify(a));
-      window.location.href = "article.html";
+      window.location.href = "/article.html";
     }
   };
   function esc(s) { const d = document.createElement("div"); d.textContent = s || ""; return d.innerHTML; }
