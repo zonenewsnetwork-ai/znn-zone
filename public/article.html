@@ -4,8 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title id="metaTitle">Loading Article... | ZNN News</title>
-    <meta name="description" id="metaDesc" content="Read the latest news on ZNN.">
+    <meta name="description" id="metaDesc" content="Read the latest news on ZNN. Powered by AI-driven automation and vetted editorial standards.">
+    <link rel="canonical" id="canonicalLink" href="https://znn-zone.netlify.app/article.html">
     <link rel="icon" href="/logo.png">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" id="ogTitle" content="ZNN News Article">
+    <meta property="og:description" id="ogDesc" content="Read the latest news on ZNN.">
+    <meta property="og:image" id="ogImage" content="https://znn-zone.netlify.app/logo.png">
+    <meta property="og:type" content="article">
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" id="twTitle" content="ZNN News Article">
+    <meta name="twitter:description" id="twDesc" content="Read the latest news on ZNN.">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -49,6 +62,7 @@
             <!-- PREMIUM ARTICLE CONTENT -->
             <article id="artContent" style="display: none;" class="art-card">
                 <header>
+                    <nav id="artBreadcrumbs" class="art-breadcrumbs"></nav>
                     <span id="artCategory" class="art-category">Category</span>
                     <h1 id="artTitle" class="art-title"></h1>
                     <div class="art-meta">
@@ -84,8 +98,27 @@
         <!-- PREMIUM FOOTER -->
         <footer class="art-footer">
             <div class="wrap">
-                <img src="/logo.png" alt="ZNN" class="art-footer-logo">
-                <p class="art-footer-copy">&copy; 2026 ZNN - Zone News Network</p>
+                <div class="ftr__grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; text-align: left; padding: 20px 0;">
+                    <div class="ftr__col">
+                        <img src="/logo.png" alt="ZNN" class="art-footer-logo" style="opacity: 1; margin-bottom: 20px;">
+                        <p style="font-size: 14px; color: #666; line-height: 1.6;">Delivering accurate, real-time journalism from every corner of the globe. Powered by AI-driven automation.</p>
+                    </div>
+                    <div class="ftr__col">
+                        <h4 style="margin-bottom: 15px; font-size: 16px; color: #000;">Network</h4>
+                        <a href="/about.html" style="color: #666; text-decoration: none; font-size: 14px; display: block; margin-bottom: 8px;">About ZNN</a>
+                        <a href="/editorial.html" style="color: #666; text-decoration: none; font-size: 14px; display: block; margin-bottom: 8px;">Editorial Team</a>
+                        <a href="/advertise.html" style="color: #666; text-decoration: none; font-size: 14px; display: block; margin-bottom: 8px;">Advertise</a>
+                        <a href="/contact.html" style="color: #666; text-decoration: none; font-size: 14px; display: block; margin-bottom: 8px;">Contact Us</a>
+                    </div>
+                    <div class="ftr__col">
+                        <h4 style="margin-bottom: 15px; font-size: 16px; color: #000;">Legal</h4>
+                        <a href="/privacy.html" style="color: #666; text-decoration: none; font-size: 14px; display: block; margin-bottom: 8px;">Privacy Policy</a>
+                        <a href="/terms.html" style="color: #666; text-decoration: none; font-size: 14px; display: block; margin-bottom: 8px;">Terms of Service</a>
+                        <a href="/cookies.html" style="color: #666; text-decoration: none; font-size: 14px; display: block; margin-bottom: 8px;">Cookie Policy</a>
+                        <a href="/support.html" style="color: #666; text-decoration: none; font-size: 14px; display: block; margin-bottom: 8px;">Support Center</a>
+                    </div>
+                </div>
+                <p class="art-footer-copy" style="margin-top: 30px; border-top: 1px solid #eee; padding-top: 20px;">&copy; 2026 ZNN - Zone News Network</p>
             </div>
         </footer>
     </div>

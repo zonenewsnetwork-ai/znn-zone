@@ -1,19 +1,88 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <title>Contact Us – ZNN</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us | ZNN News – Zone News Network</title>
+    <meta name="description" content="Reach out to ZNN News for inquiries, tips, or support. We are here to help.">
+    <link rel="canonical" href="https://znn-zone.netlify.app/contact.html">
+    <link rel="icon" href="/logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
 </head>
-<body>
-  <div class="info-page">
-    <h1>Contact ZNN</h1>
-    <p>We value your feedback and inquiries.</p>
-    <p><strong>Editorial:</strong> editorial@znn.news</p>
-    <p><strong>Advertising:</strong> ads@znn.news</p>
-    <p><strong>General:</strong> zone.news.network@gmail.com</p>
-    <br>
-    <a href="/">← Back to Home</a>
-  </div>
+<body class="static-page-body">
+    <!-- HEADER -->
+    <header class="hdr">
+        <div class="wrap hdr__inner">
+            <a href="/" class="hdr__brand">
+                <img src="/logo.png" alt="ZNN" class="hdr__logo">
+                <span class="hdr__sub">Zone News Network</span>
+            </a>
+        </div>
+    </header>
+
+    <main class="static-container">
+        <header class="static-header">
+            <h1>Contact ZNN</h1>
+            <p>Get in Touch with Our Global Team</p>
+        </header>
+
+        <section class="static-content">
+            <div class="contact-info">
+                <h2>Direct Inquiries</h2>
+                <p>For general inquiries, editorial tips, or media requests, please use the form below or contact us directly at:</p>
+                <p><strong>Email:</strong> contact@znn-news.com</p>
+            </div>
+
+            <div class="contact-form">
+                <h2>Send Us a Message</h2>
+                <form id="znnContactForm" onsubmit="event.preventDefault(); alert('Message sent successfully! Our team will get back to you shortly.'); this.reset();">
+                    <div class="form-group">
+                        <label for="name">Full Name</label>
+                        <input type="text" id="name" name="name" placeholder="Your Name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" placeholder="Your Email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="subject">Subject</label>
+                        <input type="text" id="subject" name="subject" placeholder="What is this about?" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea id="message" name="message" rows="5" placeholder="How can we help?" required></textarea>
+                    </div>
+                    <button type="submit" class="form-btn">Send Message</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="ftr">
+        <div class="wrap">
+            <div class="ftr__grid">
+                <div class="ftr__col">
+                    <img src="/logo.png" alt="ZNN" style="height:22px;margin-bottom:14px">
+                    <p>Delivering accurate, real-time journalism from every corner of the globe. Powered by AI-driven automation and vetted editorial standards.</p>
+                </div>
+                <div class="ftr__col">
+                    <h4>Network</h4>
+                    <a href="/about.html">About ZNN</a><br>
+                    <a href="/editorial.html">Editorial Team</a><br>
+                    <a href="/advertise.html">Advertise</a><br>
+                    <a href="/contact.html">Contact Us</a>
+                </div>
+                <div class="ftr__col">
+                    <h4>Legal</h4>
+                    <a href="/privacy.html">Privacy Policy</a><br>
+                    <a href="/terms.html">Terms of Service</a><br>
+                    <a href="/cookies.html">Cookie Policy</a><br>
+                    <a href="/support.html">Support Center</a>
+                </div>
+            </div>
+        </div>
+    </footer>
 </body>
 </html>

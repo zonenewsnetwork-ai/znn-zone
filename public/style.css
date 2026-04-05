@@ -1270,3 +1270,128 @@ h3 { font-size: 17px; }
 }
 .art-footer-logo { height: 24px; opacity: 0.3; margin-bottom: 15px; }
 .art-footer-copy { font-size: 11px; color: #999; text-transform: uppercase; letter-spacing: 2px; }
+
+/* ==========================================================
+   ZNN – STATIC PAGE LAYOUT
+   ========================================================== */
+.static-page-body {
+  background-color: #ffffff !important;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  color: #333;
+  line-height: 1.6;
+}
+
+.static-container {
+  max-width: 800px;
+  margin: 60px auto !important;
+  padding: 0 24px;
+  min-height: 60vh;
+}
+
+.static-header {
+  margin-bottom: 40px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 20px;
+}
+
+.static-header h1 {
+  font-size: 32px;
+  font-weight: 800;
+  color: #000;
+  margin-bottom: 10px;
+}
+
+.static-content h2 {
+  font-size: 22px;
+  font-weight: 700;
+  margin: 32px 0 16px;
+  color: #111;
+}
+
+.static-content p {
+  margin-bottom: 20px;
+  font-size: 17px;
+  color: #444;
+}
+
+.static-content ul {
+  margin-bottom: 24px;
+  padding-left: 20px;
+}
+
+.static-content li {
+  margin-bottom: 10px;
+}
+
+@media (max-width: 600px) {
+  .static-header h1 { font-size: 26px; }
+  .static-container { margin: 30px auto !important; }
+}
+
+/* Contact Form UI Placeholder */
+.contact-form {
+  background: #f9f9f9;
+  padding: 30px;
+  border-radius: 12px;
+  margin-top: 40px;
+}
+.form-group {
+  margin-bottom: 20px;
+}
+.form-group label {
+  display: block;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.form-group input, .form-group textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-family: inherit;
+}
+.form-btn {
+  background: #e50914;
+  color: white;
+  padding: 12px 30px;
+  border: none;
+  border-radius: 30px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* --- BREADCRUMBS --- */
+.art-breadcrumbs {
+  margin-bottom: 24px;
+  font-size: 13px;
+  color: #666;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.art-breadcrumbs a {
+  color: #666;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.art-breadcrumbs a:hover {
+  color: #e50914;
+}
+
+.art-breadcrumbs span {
+  color: #ccc;
+  font-family: serif;
+}
+
+.art-breadcrumbs .current {
+  color: #999;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 250px;
+}

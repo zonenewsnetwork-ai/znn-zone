@@ -22,7 +22,14 @@ document.addEventListener("DOMContentLoaded", () => {
         relatedGrid: document.getElementById("relatedGrid"),
         relatedSection: document.getElementById("artRelated"),
         metaTitle: document.getElementById("metaTitle"),
-        metaDesc: document.getElementById("metaDesc")
+        metaDesc: document.getElementById("metaDesc"),
+        canonical: document.getElementById("canonicalLink"),
+        ogTitle: document.getElementById("ogTitle"),
+        ogDesc: document.getElementById("ogDesc"),
+        ogImage: document.getElementById("ogImage"),
+        twTitle: document.getElementById("twTitle"),
+        twDesc: document.getElementById("twDesc"),
+        breadcrumbs: document.getElementById("artBreadcrumbs")
     };
 
     // Logging verification
@@ -54,6 +61,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
+            // Execute SEO and Content Rendering
             renderArticle(data);
             fetchRelated(data.category, data.id);
         } catch (err) {
@@ -74,19 +82,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // SEO & Titles
         const displayTitle = art.title || "Untitled News";
+        const displayCategory = art.category || "General";
+        const displayDesc = (art.description || art.content || "").substring(0, 160) + "...";
+        const displayImg = art.image_url || art.image || FALLBACK_IMG;
+
         if (elements.metaTitle) elements.metaTitle.textContent = `${displayTitle} | ZNN News`;
         if (elements.title) elements.title.textContent = displayTitle;
-        if (elements.category) elements.category.textContent = (art.category || "General").toUpperCase();
+        if (elements.category) elements.category.textContent = displayCategory.toUpperCase();
 
         // Meta Info
         if (elements.metaAuthor) elements.metaAuthor.textContent = art.author || "ZNN Editorial";
         if (elements.metaDate) elements.metaDate.textContent = formatDate(art.created_at);
 
-        // Hero Image
-        const imgUrl = art.image_url || art.image || FALLBACK_IMG;
+        // Hero Image (Performance Optimized)
         if (elements.heroImg) {
-            elements.heroImg.src = imgUrl;
+            elements.heroImg.src = displayImg;
             elements.heroImg.alt = displayTitle;
+            elements.heroImg.setAttribute("loading", "eager"); // Hero should load fast
             elements.heroImg.onerror = () => { elements.heroImg.src = FALLBACK_IMG; };
         }
 
@@ -97,16 +109,85 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         if (elements.body) elements.body.innerHTML = contentStr;
 
-        // Meta Description update
-        if (elements.metaDesc) {
-            elements.metaDesc.content = contentStr.replace(/<[^>]*>/g, "").substring(0, 160) + "...";
-        }
+        // --- SEO UPGRADE ---
+        updateSEOContent(art, displayTitle, displayDesc, displayImg);
+        renderBreadcrumbs(displayCategory, displayTitle);
 
-        // Setup Social Share with proper event listeners
+        // Setup Social Share
         setupSocial(displayTitle);
 
         // Scroll to top
         window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    /**
+     * UPDATE DYNAMIC SEO META & SCHEMA
+     */
+    function updateSEOContent(art, title, desc, img) {
+        const url = window.location.href;
+
+        // Meta Tags
+        if (elements.metaDesc) elements.metaDesc.content = desc;
+        if (elements.canonical) elements.canonical.href = url;
+        
+        // Open Graph
+        if (elements.ogTitle) elements.ogTitle.content = title;
+        if (elements.ogDesc) elements.ogDesc.content = desc;
+        if (elements.ogImage) elements.ogImage.content = img;
+        
+        // Twitter
+        if (elements.twTitle) elements.twTitle.content = title;
+        if (elements.twDesc) elements.twDesc.content = desc;
+
+        // JSON-LD Structured Data (NewsArticle)
+        const schema = {
+            "@context": "https://schema.org",
+            "@type": "NewsArticle",
+            "headline": title,
+            "image": [img],
+            "datePublished": art.created_at || new Date().toISOString(),
+            "author": {
+                "@type": "Organization",
+                "name": "ZNN"
+            },
+            "publisher": {
+                "@type": "Organization",
+                "name": "ZNN",
+                "logo": {
+                    "@type": "ImageObject",
+                    "url": "https://znn-zone.netlify.app/logo.png"
+                }
+            },
+            "description": desc,
+            "mainEntityOfPage": {
+                "@type": "WebPage",
+                "@id": url
+            }
+        };
+
+        let scriptTag = document.getElementById("artSchema");
+        if (!scriptTag) {
+            scriptTag = document.createElement("script");
+            scriptTag.id = "artSchema";
+            scriptTag.type = "application/ld+json";
+            document.head.appendChild(scriptTag);
+        }
+        scriptTag.text = JSON.stringify(schema);
+    }
+
+    /**
+     * RENDER BREADCRUMBS
+     */
+    function renderBreadcrumbs(category, title) {
+        if (!elements.breadcrumbs) return;
+        
+        elements.breadcrumbs.innerHTML = `
+            <a href="/">Home</a>
+            <span>&rsaquo;</span>
+            <a href="/#${category.toLowerCase()}">${category}</a>
+            <span>&rsaquo;</span>
+            <div class="current">${title}</div>
+        `;
     }
 
     /**
